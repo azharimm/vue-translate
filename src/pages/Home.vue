@@ -4,8 +4,8 @@
 			<div class="col-md-6 offset-6">
 				<form action>
 					<div class="row">
-						<div class="col">
-							<button class="btn btn-sm btn-primary float-right">
+						<div class="col" v-if="!is_loading && !is_error && result">
+							<button class="btn btn-sm btn-primary float-right" @click.prevent="copy">
 								<i class="fas fa-copy"></i> Copy
 							</button>
 							<button class="btn btn-sm btn-warning mr-2 float-right">
@@ -45,7 +45,11 @@
 									<p v-if="is_error" style="padding: 2px 3px;">
 										<b>Something went wrong!</b>
 									</p>
-									<p v-if="!is_loading && !is_error && result" style="padding: 2px 3px;">{{result}}</p>
+									<p
+										v-if="!is_loading && !is_error && result"
+										ref="result"
+										style="padding: 2px 3px;"
+									>{{result}}</p>
 								</div>
 							</div>
 						</form>
@@ -117,6 +121,17 @@ export default {
 			this.is_loading = true;
 			this.is_error = false;
 			this.translate();
+		},
+		copy() {
+			let self = this;
+			this.$copyText(this.result).then(
+				function () {
+					self.$swal('Text copied!');
+				},
+				function () {
+					self.$swal('Failed to copy text!');
+				}
+			);
 		},
 		cancelTranslate() {
 			if (this.cancelSource) {
