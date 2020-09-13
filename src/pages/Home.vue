@@ -13,9 +13,8 @@
 							</button>
 						</div>
 						<div class="col">
-							<select class="form-control">
-								<option value="en">English</option>
-								<option value="en">Indonesia</option>
+							<select class="form-control" v-model="to" @change="changeLanguage">
+								<option :value="list.code" v-for="list in to_list" :key="list.code">{{list.name}}</option>
 							</select>
 						</div>
 					</div>
@@ -29,7 +28,7 @@
 						<form action>
 							<div class="form-group">
 								<label for="text">Text: (Detected automatically)</label>
-								<textarea class="form-control" cols="30" rows="5"></textarea>
+								<textarea v-model="text" class="form-control" cols="30" @keyup="changeText" rows="5"></textarea>
 							</div>
 						</form>
 					</div>
@@ -41,7 +40,13 @@
 						<form action>
 							<div class="form-group">
 								<label for="text">Translated Text:</label>
-								<textarea class="form-control" cols="30" readonly rows="5"></textarea>
+								<div style="background: rgb(239 239 239); min-height: 135px;">
+									<p v-if="is_loading" style="padding: 2px 3px;">. . .</p>
+									<p v-if="is_error" style="padding: 2px 3px;">
+										<b>Something went wrong!</b>
+									</p>
+									<p v-if="!is_loading && !is_error && result" style="padding: 2px 3px;">{{result}}</p>
+								</div>
 							</div>
 						</form>
 					</div>
@@ -52,12 +57,72 @@
 </template>
 
 <script>
+import axios from "axios";
 import Container from "../components/Container";
 import Row from "../components/Row";
+
+import api from "../api";
+import list from "../list";
 export default {
 	components: {
 		Container,
 		Row,
+	},
+	data() {
+		return {
+			text: "",
+			result: "",
+			to: "id",
+			to_list: list,
+			is_loading: false,
+			is_error: false,
+			cancelSource: null,
+		};
+	},
+	mounted() {
+		console.log("Oh, Hi there! ✋");
+	},
+	methods: {
+		changeText() {
+			if (this.text != "") {
+				this.is_loading = true;
+				this.is_error = false;
+				this.translate();
+			} else {
+				this.result = "";
+			}
+		},
+		async translate() {
+			try {
+				this.cancelTranslate();
+				this.cancelSource = axios.CancelToken.source();
+				const result = await api.get(
+					`?engine=google&text=${this.text}&to=${this.to}`,
+					{
+						cancelToken: this.cancelSource.token,
+					}
+				);
+				this.is_loading = false;
+				this.result = result.data.data.result;
+			} catch (error) {
+				if (error.response) {
+					if (error.response.status == 500) {
+						this.is_error = true;
+						this.is_loading = false;
+					}
+				}
+			}
+		},
+		changeLanguage() {
+			this.is_loading = true;
+			this.is_error = false;
+			this.translate();
+		},
+		cancelTranslate() {
+			if (this.cancelSource) {
+				this.cancelSource.cancel();
+			}
+		},
 	},
 };
 </script>
