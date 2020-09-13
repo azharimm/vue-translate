@@ -1,6 +1,6 @@
 <template>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<a class="navbar-brand" href="#">
+		<router-link tag="a" class="navbar-brand" to="/">
 			<img
 				src="https://cdn4.iconfinder.com/data/icons/materia-flat-basic-vol-2/24/009_094_translator_translate_letter_hieroglyph-256.png"
 				width="30"
@@ -8,7 +8,7 @@
 				alt
 			/>
 			Traduire
-		</a>
+		</router-link>
 		<button
 			class="navbar-toggler"
 			type="button"
@@ -23,10 +23,10 @@
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item active">
-					<a class="nav-link" href="#">Home</a>
+					<router-link tag="a" class="nav-link" to="/">Home</router-link>
 				</li>
 				<li class="nav-item active">
-					<a class="nav-link" href="#">Saved</a>
+					<router-link tag="a" class="nav-link" to="/saved">Saved</router-link>
 				</li>
 			</ul>
 		</div>
