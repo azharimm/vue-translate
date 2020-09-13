@@ -7,7 +7,7 @@
 				height="30"
 				alt
 			/>
-			Traduire
+			Translate
 		</router-link>
 		<button
 			class="navbar-toggler"
