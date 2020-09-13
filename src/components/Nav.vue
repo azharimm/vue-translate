@@ -2,7 +2,7 @@
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<router-link tag="a" class="navbar-brand" to="/">
 			<img
-				src="https://cdn4.iconfinder.com/data/icons/materia-flat-basic-vol-2/24/009_094_translator_translate_letter_hieroglyph-256.png"
+				src="../assets/img/logowebp.webp"
 				width="30"
 				height="30"
 				alt
