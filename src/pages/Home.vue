@@ -8,7 +8,7 @@
 							<button class="btn btn-sm btn-primary float-right" @click.prevent="copy">
 								<i class="fas fa-copy"></i> Copy
 							</button>
-							<button class="btn btn-sm btn-warning mr-2 float-right">
+							<button class="btn btn-sm btn-warning mr-2 float-right" @click.prevent="saved">
 								<i class="far fa-star"></i> Save
 							</button>
 						</div>
@@ -81,10 +81,16 @@ export default {
 			is_loading: false,
 			is_error: false,
 			cancelSource: null,
+			savedTranslation: [],
 		};
 	},
 	mounted() {
 		console.log("Oh, Hi there! ✋");
+		if (localStorage.getItem("savedTranslation")) {
+			this.savedTranslation = JSON.parse(
+				localStorage.getItem("savedTranslation")
+			);
+		}
 	},
 	methods: {
 		changeText() {
@@ -126,12 +132,29 @@ export default {
 			let self = this;
 			this.$copyText(this.result).then(
 				function () {
-					self.$swal('Text copied!');
+					self.$swal("Text copied!");
 				},
 				function () {
-					self.$swal('Failed to copy text!');
+					self.$swal("Failed to copy text!");
 				}
 			);
+		},
+		saved() {
+			this.savedTranslation.unshift({
+				id: Date.now().toString(),
+				origin: this.text,
+				result: this.result,
+			});
+
+			localStorage.setItem(
+				"savedTranslation",
+				JSON.stringify(this.savedTranslation)
+			);
+			this.$swal({
+				icon: "success",
+				title: "Success",
+				text: "Text saved!",
+			});
 		},
 		cancelTranslate() {
 			if (this.cancelSource) {

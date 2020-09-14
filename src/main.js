@@ -12,7 +12,7 @@ Vue.use(VueRouter);
 Vue.use(VueClipboard)
 
 const router = new VueRouter({
-	mode: 'history',
+	mode: 'hash',
 	routes,
 });
 
