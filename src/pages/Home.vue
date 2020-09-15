@@ -86,11 +86,11 @@ export default {
 	},
 	mounted() {
 		console.log("Oh, Hi there! ✋");
-		if (localStorage.getItem("savedTranslation")) {
-			this.savedTranslation = JSON.parse(
-				localStorage.getItem("savedTranslation")
-			);
-		}
+	},
+	beforeRouteEnter(to, from, next) {
+		next((vm) => {
+			vm.fetchData(next);
+		});
 	},
 	methods: {
 		changeText() {
@@ -124,9 +124,11 @@ export default {
 			}
 		},
 		changeLanguage() {
-			this.is_loading = true;
-			this.is_error = false;
-			this.translate();
+			if(this.text != '' && this.text != null) {
+				this.is_loading = true;
+				this.is_error = false;
+				this.translate();
+			}
 		},
 		copy() {
 			let self = this;
@@ -150,11 +152,19 @@ export default {
 				"savedTranslation",
 				JSON.stringify(this.savedTranslation)
 			);
+			this.fetchData();
 			this.$swal({
 				icon: "success",
 				title: "Success",
 				text: "Text saved!",
 			});
+		},
+		fetchData() {
+			if (localStorage.getItem("savedTranslation")) {
+				this.savedTranslation = JSON.parse(
+					localStorage.getItem("savedTranslation")
+				);
+			}
 		},
 		cancelTranslate() {
 			if (this.cancelSource) {
