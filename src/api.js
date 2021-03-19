@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL: 'https://api-translate.azharimm.tk/translate'
+    baseURL: 'https://amm-api-translate.herokuapp.com/translate'
 });
 
 export default api;
